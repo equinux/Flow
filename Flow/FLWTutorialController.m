@@ -561,7 +561,7 @@ static void shuffleArray(NSMutableArray *array)
     }
 
     void(^nowPerformSlideOutAnimation)(void) = ^{
-        [UIView animateWithDuration:self.activeTutorial.slideInAndOutDuration delay:self.activeTutorial.slideOutDelay usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:kNilOptions animations:^{
+        [UIView animateWithDuration:self.activeTutorial.slideInAndOutDuration delay:(success ? self.activeTutorial.slideOutDelay : 0.0f) usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:kNilOptions animations:^{
             self.overlayView.transform = CGAffineTransformMakeTranslation(0.0, - preferredTutorialHeight);
         } completion:^(BOOL finished) {
             [self.overlayView removeFromSuperview];
