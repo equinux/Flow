@@ -35,6 +35,7 @@
 
 @property (nonatomic, readonly) CGPoint touchPoint;
 @property (nonatomic, readonly) UIView *view;
+@property (nonatomic, assign) CGFloat duration;
 
 - (instancetype)initWithTouchPoint:(CGPoint)touchPoint inView:(UIView *)view;
 
