@@ -381,6 +381,8 @@ static void shuffleArray(NSMutableArray *array)
     NSTimeInterval passedDuration = displayLink.timestamp - self.lastDisplayLinkCallback;
     self.lastDisplayLinkCallback = displayLink.timestamp;
 
+    [self _cancelInvalidTutorials];
+
     BOOL alertOrActionSheetIsVisible = [UIApplication sharedApplication].keyWindow != [UIApplication sharedApplication].delegate.window;
     if (alertOrActionSheetIsVisible) {
         return;
@@ -423,6 +425,13 @@ static void shuffleArray(NSMutableArray *array)
         if (tutorial.canStartTutorial && [self _startTutorial:tutorial]) {
             break;
         }
+    }
+}
+
+- (void)_cancelInvalidTutorials
+{
+    if (self.activeTutorial && self.activeTutorial.predicate && !self.activeTutorial.predicate()) {
+        [self _finishActiveTutorialWithSuccess:NO];
     }
 }
 
@@ -583,7 +592,10 @@ static void shuffleArray(NSMutableArray *array)
                 [view removeFromSuperview];
             }
 
-            NSDictionary *userInfo = @{ FLWTutorialControllerTutorialKey: activeTutorial };
+            NSDictionary *userInfo = nil;
+            if (activeTutorial) {
+                userInfo = @{ FLWTutorialControllerTutorialKey: activeTutorial };
+            }
             if (success) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:FLWTutorialControllerDidCompleteTutorialNotification object:self userInfo:userInfo];
             } else {
