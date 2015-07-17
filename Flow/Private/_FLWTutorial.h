@@ -43,6 +43,7 @@ typedef NS_ENUM(NSInteger, FLWTutorialState) {
 @property (nonatomic, assign) CGFloat fadeOutProgress;
 
 @property (nonatomic, readonly) BOOL canStartTutorial;
+@property (nonatomic, readonly) BOOL shouldStopTutorial;
 
 @property (nonatomic, assign) NSTimeInterval remainingTimeToRepeatMessage;
 
@@ -55,7 +56,8 @@ typedef NS_ENUM(NSInteger, FLWTutorialState) {
 
 @property (nonatomic, copy) NSString *previousAudioSessionCategory;
 
-@property (nonatomic, copy) FLWBlockPredicate predicate;
+@property (nonatomic, copy) FLWBlockPredicate startPredicate;
+@property (nonatomic, copy) FLWBlockPredicate stopPredicate;
 @property (nonatomic, copy) void(^constructionBlock)(id<FLWTutorial> tutorial);
 
 @property (nonatomic, readonly) BOOL isSpeeking;

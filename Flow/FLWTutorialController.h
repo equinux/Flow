@@ -93,7 +93,11 @@ extern NSString * const FLWTutorialRandomSuccessMessage;
 
  @param delay Is only counted down when predicate evaluates to true
  */
-- (void)scheduleTutorialWithIdentifier:(NSString *)identifier afterDelay:(NSTimeInterval)delay withPredicate:(FLWBlockPredicate)predicate constructionBlock:(void(^)(id<FLWTutorial> tutorial))constructionBlock;
+- (void)scheduleTutorialWithIdentifier:(NSString *)identifier
+    afterDelay:(NSTimeInterval)delay
+    withStartPredicate:(FLWBlockPredicate)startPredicate
+    stopPredicate:(FLWBlockPredicate)stopPredicate
+    constructionBlock:(void(^)(id<FLWTutorial> tutorial))constructionBlock;
 
 /**
  Invalides a scheduled tutorial without changing its completion state.

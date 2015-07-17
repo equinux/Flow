@@ -169,7 +169,11 @@ static void shuffleArray(NSMutableArray *array)
     }
 }
 
-- (void)scheduleTutorialWithIdentifier:(NSString *)identifier afterDelay:(NSTimeInterval)delay withPredicate:(FLWBlockPredicate)predicate constructionBlock:(void(^)(id<FLWTutorial> tutorial))constructionBlock
+- (void)scheduleTutorialWithIdentifier:(NSString *)identifier
+    afterDelay:(NSTimeInterval)delay
+    withStartPredicate:(FLWBlockPredicate)startPredicate
+    stopPredicate:(FLWBlockPredicate)stopPredicate
+    constructionBlock:(void(^)(id<FLWTutorial> tutorial))constructionBlock
 {
     NSParameterAssert([NSThread currentThread].isMainThread);
     NSParameterAssert(constructionBlock);
@@ -184,7 +188,8 @@ static void shuffleArray(NSMutableArray *array)
     }
 
     _FLWTutorial *tutorial = [[_FLWTutorial alloc] initWithIdentifier:identifier];
-    tutorial.predicate = predicate;
+    tutorial.startPredicate = startPredicate;
+    tutorial.stopPredicate = stopPredicate;
     tutorial.remainingDuration = delay;
     tutorial.state = FLWTutorialStateScheduled;
     tutorial.constructionBlock = constructionBlock;
@@ -411,7 +416,7 @@ static void shuffleArray(NSMutableArray *array)
 - (void)_countRemainingTutorialTimeDownWithPassedDuration:(NSTimeInterval)passedDuration
 {
     for (_FLWTutorial *tutorial in self.scheduledTutorials) {
-        if (tutorial.predicate && !tutorial.predicate()) {
+        if (tutorial.startPredicate && !tutorial.startPredicate()) {
             continue;
         }
 
@@ -430,7 +435,10 @@ static void shuffleArray(NSMutableArray *array)
 
 - (void)_cancelInvalidTutorials
 {
-    if (self.activeTutorial && self.activeTutorial.predicate && !self.activeTutorial.predicate()) {
+    if (self.activeTutorial
+        && [self.activeTutorial shouldStopTutorial]
+        && !self.activeTutorial.isTransitioningToFinish)
+    {
         [self _finishActiveTutorialWithSuccess:NO];
     }
 }

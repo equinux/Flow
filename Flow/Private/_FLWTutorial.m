@@ -81,11 +81,24 @@
         return NO;
     }
 
-    if (self.predicate && !self.predicate()) {
+    if (self.startPredicate && !self.startPredicate()) {
         return NO;
     }
 
     return self.remainingDuration <= 0.0;
+}
+
+- (BOOL)shouldStopTutorial
+{
+    if (self.state != FLWTutorialStateRunning) {
+        return NO;
+    }
+  
+    if (self.stopPredicate && !self.stopPredicate()) {
+        return YES;
+    }
+
+    return NO;
 }
 
 #pragma mark - Initialization
